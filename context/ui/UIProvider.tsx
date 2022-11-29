@@ -3,10 +3,14 @@ import { UIContext,uiReducer } from './';
 
 export interface UIState{
 sideMenuOpen: boolean;
+isAddingEntry: boolean;
+isDragging: boolean;
 }
 
 const UI_INITIAL_STATE: UIState = {
 sideMenuOpen: false,
+isAddingEntry: false,
+isDragging: false,
 }
 
 
@@ -19,6 +23,14 @@ const openSideMenu = () => {
 
 const closeSideMenu = () => dispatch({type: 'UI - Close Sidebar'})
 
+const openEntry = () => dispatch({type: 'UI - Open Entries'})
+
+const closeEntry = () => dispatch({type:'UI - Close Entries'})
+
+const startDragging = () => dispatch({type:'UI - Start Dragging'})
+
+const endDragging = () => dispatch({type:'UI - End Dragging'})
+
 return (
 <UIContext.Provider value={{
 ...state,
@@ -26,6 +38,11 @@ return (
 // Methods
 openSideMenu,
 closeSideMenu,
+openEntry,
+closeEntry,
+startDragging,
+endDragging,
+
 }}>
 {children}
 </UIContext.Provider>
