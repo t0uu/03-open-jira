@@ -3,7 +3,7 @@ import { Entry } from '../../interfaces';
 import { v4 as uuidv4 } from 'uuid';
 import { EntriesContext,EntriesReducer } from './';
 import { entriesApi } from '../../apis';
-
+import { useSnackbar } from 'notistack';
 export interface EntriesState{
 entries: Entry[];
 }
@@ -15,7 +15,7 @@ entries: [],
 
 export const EntriesProvider:FC<PropsWithChildren> = ({children}) => {
 const [state, dispatch] = useReducer(EntriesReducer, Entries_INITIAL_STATE);
-
+const { enqueueSnackbar} = useSnackbar();
 const addNewEntry = async(description: string) => {
 // const newEntry:Entry = {
 //     _id: uuidv4(),
@@ -28,11 +28,22 @@ dispatch({type:'[Entry] Add-Entry',payload: data})
 
 }
 
-const updateEntry = async(entry: Entry) => {
+const updateEntry = async(entry: Entry,showSnackbar = false) => {
     try {
 const {data} = await entriesApi.put<Entry>(`/entries/${entry._id}`,{description: entry.description,status:entry.status}); 
 
         dispatch({type:'[Entry] Entry-Updated',payload: data});
+        //TODO: mostrar snackbar
+        if(showSnackbar)
+            enqueueSnackbar('Entrada actualizada',{
+                variant:'success',
+                autoHideDuration:1500,
+        anchorOrigin:{
+            vertical:'top',
+            horizontal:'right'
+        }
+    });
+
     } catch (error) {
         console.log({error});
     }
